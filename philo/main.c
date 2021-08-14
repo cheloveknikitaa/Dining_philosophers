@@ -6,7 +6,7 @@
 /*   By: caugusta <caugusta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 15:00:08 by caugusta          #+#    #+#             */
-/*   Updated: 2021/08/13 22:17:36 by caugusta         ###   ########.fr       */
+/*   Updated: 2021/08/14 16:34:38 by caugusta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,24 +68,16 @@ void	gets_forks(t_info *info, pthread_mutex_t *forks, t_philo *philo)
 	int	i;
 
 	i = 1;
-	philo[0].left = &forks[info->amount_of_philo - 1];
-	philo[0].right = &forks[0];
+	philo[0].left = &forks[0];
+	philo[0].right = &forks[info->amount_of_philo - 1];
 	while (i < info->amount_of_philo - 1)
 	{
-		if (i % 2 != 0)
-		{
-			philo[i].left = &forks[i];
-			philo[i].right = &forks[i - 1];
-		}
-		else
-		{
-			philo[i].left = &forks[i - 1];
-			philo[i].right = &forks[i];
-		}
+		philo[i].left = &forks[i];
+		philo[i].right = &forks[i - 1];
 		i++;
 	}
-	philo[i].left = &forks[i];
-	philo[i].right = &forks[0];
+	philo[i].left = &forks[0];
+	philo[i].right = &forks[i];
 }
 
 int	init_philo(t_info *info, t_philo *philo, pthread_mutex_t *forks)
