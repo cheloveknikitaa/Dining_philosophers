@@ -6,7 +6,7 @@
 /*   By: caugusta <caugusta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 15:11:02 by caugusta          #+#    #+#             */
-/*   Updated: 2021/08/15 18:39:37 by caugusta         ###   ########.fr       */
+/*   Updated: 2021/08/15 20:06:22 by caugusta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	print(char *str, t_philo *philo)
 	}
 	else
 	{
-		printf("%lld %d %s", ((philo->info->time - philo->start) / 1000), \
+		printf("%lld %d %s", ((philo->info->time - philo->start) / 1000) + 1, \
 			philo->id, str);
 		pthread_mutex_unlock(&philo->info->message);
 	}
@@ -44,19 +44,19 @@ void	*life_of_philo(void	*ph)
 	n = philo->info->amount_of_cicles;
 	while (n != 0)
 	{
-		forks_take_down("take first fork\n", philo, philo->left, 0);
-		forks_take_down("take second fork\n", philo, philo->right, 0);
+		forks_take("take first fork\n", philo, 1);
+		forks_take("take second fork\n", philo, 2);
 		philo->deadline += philo->info->time_to_eat + philo->info->time_to_die;
 		if (print("eating start\n", philo) == -1)
 			return (NULL);
-		usleep(philo->info->time_to_eat);
-		forks_take_down("down second fork\n", philo, philo->right, 1);
-		forks_take_down("down first fork\n", philo, philo->left, 1);
+		my_usleep(philo->info->time_to_eat, philo->info);
+		forks_down("down second fork\n", philo, 1);
+		forks_down("down first fork\n", philo, 2);
 		if (print("eating end and go to sleep\n", philo) == -1)
 			return (NULL);
 		if (--n == 0)
 			philo->info->all_philo_eating--;
-		usleep(philo->info->time_to_sleap);
+		my_usleep(philo->info->time_to_sleap, philo->info);
 		if (print("thinking\n", philo) == -1)
 			return (NULL);
 	}
@@ -78,7 +78,7 @@ void	death(t_info *info, t_philo *philo, pthread_mutex_t *forks)
 			{
 				info->amount_of_philo = -1;
 				printf("%lld %d %s", \
-				((info->time - philo[i].start) / 1000) \
+				((info->time - philo[i].start) / 1000) + 1 \
 				, philo[i].id, " philo dead.\n");
 				break ;
 			}
@@ -122,18 +122,42 @@ int	init_philo(t_info *info, t_philo *philo, pthread_mutex_t *forks)
 	return (0);
 }
 
-void	forks_take_down(char *str, t_philo *philo, pthread_mutex_t *fork, int i)
+void	forks_take(char *str, t_philo *ph, int try)
 {
-	if (i == 0)
+	if (try == 1)
 	{
-		pthread_mutex_lock(fork);
-		if (print(str, philo) == -1)
-			pthread_mutex_unlock(fork);
+		if (ph->id % 2 == 0)
+			pthread_mutex_lock(ph->left);
+		else
+			pthread_mutex_lock(ph->right);
 	}
 	else
 	{
-		pthread_mutex_unlock(fork);
-		if (print(str, philo) == -1)
-			return ;
+		if (ph->id % 2 == 0)
+			pthread_mutex_lock(ph->right);
+		else
+			pthread_mutex_lock(ph->left);
 	}
+	if (print(str, ph) == -1)
+		return ;
+}
+
+void	forks_down(char *str, t_philo *ph, int try)
+{
+	if (try == 1)
+	{
+		if (ph->id % 2 == 0)
+			pthread_mutex_unlock(ph->right);
+		else
+			pthread_mutex_unlock(ph->left);
+	}
+	else
+	{
+		if (ph->id % 2 == 0)
+			pthread_mutex_unlock(ph->left);
+		else
+			pthread_mutex_unlock(ph->right);
+	}
+	if (print(str, ph) == -1)
+		return ;
 }
