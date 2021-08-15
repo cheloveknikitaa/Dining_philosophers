@@ -6,7 +6,7 @@
 /*   By: caugusta <caugusta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 15:00:36 by caugusta          #+#    #+#             */
-/*   Updated: 2021/08/13 22:20:36 by caugusta         ###   ########.fr       */
+/*   Updated: 2021/08/15 18:36:12 by caugusta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_info
 	int				amount_of_philo;
 	int				amount_of_cicles;
 	int				amount_of_forks;
+	int				all_philo_eating;
 }				t_info;
 
 typedef struct s_philo
@@ -53,5 +54,9 @@ int			inits_forks(pthread_mutex_t *forks, int i);
 long long	get_time(t_info *info);
 void		death(t_info *info, t_philo *philo, pthread_mutex_t *forks);
 void		destroy_forks(pthread_mutex_t *forks, int n);
+int			this_is_num(char **argv);
+void		forks_take_down(char *str, t_philo *philo, pthread_mutex_t *fork, int i);
+void		my_usleep(long long sec);
+
 
 #endif
