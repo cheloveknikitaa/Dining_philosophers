@@ -6,11 +6,11 @@
 #    By: caugusta <caugusta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/15 17:22:08 by caugusta          #+#    #+#              #
-#    Updated: 2021/08/17 15:09:43 by caugusta         ###   ########.fr        #
+#    Updated: 2021/08/17 15:06:40 by caugusta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo
+NAME = philo_bonus
 
 SRCS = main.c utils.c actions.c my_usleep.c
 OBJS = ${SRCS:.c=.o}
@@ -18,26 +18,19 @@ OBJS = ${SRCS:.c=.o}
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -I. 
 
-.PHONY : all bonus clean fclean re
+.PHONY : bonus clean fclean re
 
-all: ${NAME}
+bonus: ${NAME}
 
 ${OBJS} : philo.h
 
 ${NAME} : ${OBJS}
 	${CC} ${CFLAGS} -o $@ $^
 
-bonus:
-	$(MAKE) -C ../philo_bonus
-	cp ../philo_bonus/philo_bonus .
-
 clean: 
 	rm -rf ${OBJS}
-	$(MAKE) clean -C ../philo_bonus
 
 fclean: clean
-	$(MAKE) fclean -C ../philo_bonus
-	rm -rf philo_bonus
 	rm -rf ${NAME}
 
 re:	fclean all
