@@ -6,7 +6,7 @@
 /*   By: caugusta <caugusta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 15:00:08 by caugusta          #+#    #+#             */
-/*   Updated: 2021/08/22 15:04:05 by caugusta         ###   ########.fr       */
+/*   Updated: 2021/08/22 17:53:23 by caugusta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ int	main(int argc, char **argv)
 		return (exit_error("Error, inits mutex error\n", forks, philo));
 	if (init_philo(&info, philo, forks) == -1)
 		return (exit_error("Error, thread create error\n", forks, philo));
-	death(&info, philo, forks);
-	return (0);
+	return (death(&info, philo, forks));
 }
 
 int	parser(int argc, char **argv, t_info *info)
@@ -52,11 +51,15 @@ int	parser(int argc, char **argv, t_info *info)
 	info->time_to_eat = ft_atoi(argv[3]);
 	if (info->time_to_eat < 1)
 		return (exit_error("Error, invalid arguments\n", NULL, NULL));
-	info->time_to_sleap = ft_atoi(argv[4]);
-	if (info->time_to_sleap < 1)
+	info->time_to_sleep = ft_atoi(argv[4]);
+	if (info->time_to_sleep < 1)
 		return (exit_error("Error, invalid arguments\n", NULL, NULL));
 	if (argc == 6)
+	{
 		info->amount_of_cicles = ft_atoi(argv[5]);
+		if (info->amount_of_cicles < 1)
+			return (exit_error("Error, invalid arguments\n", NULL, NULL));
+	}
 	else
 		info->amount_of_cicles = -2;
 	info->all_philo_eating = info->amount_of_philo;
@@ -103,11 +106,11 @@ int	inits_forks(t_info *info, pthread_mutex_t *forks, t_philo *philo)
 	i = 0;
 	while (i < info->amount_of_philo - 1)
 	{
-		philo[i].left = &forks[i];
-		philo[i].right = &forks[i + 1];
+		philo[i].left = &forks[i + 1];
+		philo[i].right = &forks[i];
 		i++;
 	}
-	philo[i].left = &forks[0];
-	philo[i].right = &forks[i];
+	philo[i].left = &forks[i];
+	philo[i].right = &forks[0];
 	return (0);
 }
