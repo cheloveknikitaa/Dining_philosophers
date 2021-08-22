@@ -5,21 +5,35 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: caugusta <caugusta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/13 20:38:15 by caugusta          #+#    #+#             */
-/*   Updated: 2021/08/17 15:27:59 by caugusta         ###   ########.fr       */
+/*   Created: 2021/08/15 19:10:54 by caugusta          #+#    #+#             */
+/*   Updated: 2021/08/22 22:06:24 by caugusta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-size_t	ft_strlen(const char *str)
+void	my_usleep(long long time, t_info *info)
 {
-	size_t	i;
+	long long	time_to_wake;
 
-	i = 0;
-	while (str[i] != '\0')
-		i++;
-	return (i);
+	if (info->dead < 0 || info->all_eating == 0)
+		return ;
+	time_to_wake = info->time + time;
+	while (info->time < time_to_wake)
+		usleep(250);
+}
+
+void	philo_born(t_info *info, t_philo *philo, int i)
+{
+	philo[i].info = info;
+	philo[i].start = info->time;
+	philo[i].amount_of_eating = info->amount_of_cicles;
+	philo[i].id = i + 1;
+	philo[i].deadline = info->time_to_die + info->time;
+	if (pthread_create(&philo[i].thread, \
+		NULL, life_of_philo, (void *)&philo[i]) != 0)
+		info->dead = -1;
+	pthread_detach(philo[i].thread);
 }
 
 long long	ft_atoi(const char *str)
@@ -56,31 +70,23 @@ long long	get_time(t_info *info)
 	return (info->time);
 }
 
-int	exit_error(char *str, pthread_mutex_t *forks, t_philo *philo)
-{
-	if (forks != NULL)
-	{
-		free(forks);
-		forks = NULL;
-	}
-	if (philo != NULL)
-	{
-		free(philo);
-		philo = NULL;
-	}
-	if (str != NULL)
-		write(2, str, ft_strlen(str));
-	return (-1);
-}
-
-void	destroy_forks(pthread_mutex_t *forks, int n)
+int	this_is_num(char **argv)
 {
 	int	i;
+	int	j;
 
-	i = 0;
-	while (i < n)
+	i = 1;
+	j = 0;
+	while (argv[i] != NULL)
 	{
-		pthread_mutex_destroy(&forks[i]);
+		j = 0;
+		while (argv[i][j] != '\0')
+		{
+			if (argv[i][j] < '0' || argv[i][j] > '9')
+				return (-1);
+			j++;
+		}
 		i++;
 	}
+	return (0);
 }

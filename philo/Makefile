@@ -6,13 +6,13 @@
 #    By: caugusta <caugusta@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/15 17:22:08 by caugusta          #+#    #+#              #
-#    Updated: 2021/08/22 17:15:20 by caugusta         ###   ########.fr        #
+#    Updated: 2021/08/22 22:09:24 by caugusta         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-SRCS = main.c utils.c actions.c my_usleep.c
+SRCS = main.c utils.c actions.c
 OBJS = ${SRCS:.c=.o}
 
 CC = gcc
@@ -25,7 +25,7 @@ all: ${NAME}
 ${OBJS} : philo.h
 
 ${NAME} : ${OBJS}
-	${CC} ${CFLAGS} -o $@ $^
+	${CC} ${CFLAGS} -o $@ $^ -pthread
 
 clean: 
 	rm -rf ${OBJS}
