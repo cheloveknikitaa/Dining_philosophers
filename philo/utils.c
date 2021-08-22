@@ -6,7 +6,7 @@
 /*   By: caugusta <caugusta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/13 20:38:15 by caugusta          #+#    #+#             */
-/*   Updated: 2021/08/15 19:57:03 by caugusta         ###   ########.fr       */
+/*   Updated: 2021/08/17 15:27:59 by caugusta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ long long	get_time(t_info *info)
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	info->time = time.tv_sec * 1000000 + time.tv_usec;
+	info->time = time.tv_sec * 1000 + time.tv_usec / 1000;
 	return (info->time);
 }
 

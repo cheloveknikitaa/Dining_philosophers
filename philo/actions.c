@@ -6,7 +6,7 @@
 /*   By: caugusta <caugusta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 15:11:02 by caugusta          #+#    #+#             */
-/*   Updated: 2021/08/16 11:27:35 by caugusta         ###   ########.fr       */
+/*   Updated: 2021/08/22 15:02:03 by caugusta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	print(char *str, t_philo *philo)
 	}
 	else
 	{
-		printf("%lld %d %s", ((philo->info->time - philo->start) / 1000) + 1, \
+		printf("%lld %d %s", ((philo->info->time - philo->start)), \
 			philo->id, str);
 		pthread_mutex_unlock(&philo->info->message);
 	}
@@ -68,7 +68,6 @@ void	death(t_info *info, t_philo *philo, pthread_mutex_t *forks)
 {
 	int	i;
 
-	info->amount_of_forks = info->amount_of_philo;
 	while (1)
 	{
 		i = 0;
@@ -78,7 +77,7 @@ void	death(t_info *info, t_philo *philo, pthread_mutex_t *forks)
 			{
 				info->amount_of_philo = -1;
 				printf("%lld %d %s", \
-				((info->time - philo[i].start) / 1000) + 1 \
+				((info->time - philo[i].start)) \
 				, philo[i].id, " philo dead.\n");
 				break ;
 			}
@@ -90,7 +89,7 @@ void	death(t_info *info, t_philo *philo, pthread_mutex_t *forks)
 			break ;
 		}
 	}
-	destroy_forks(forks, info->amount_of_forks);
+	joiner(info, philo, forks);
 }
 
 int	init_philo(t_info *info, t_philo *philo, pthread_mutex_t *forks)
@@ -98,7 +97,6 @@ int	init_philo(t_info *info, t_philo *philo, pthread_mutex_t *forks)
 	int	i;
 
 	i = 0;
-	gets_forks(info, forks, philo);
 	info->time = get_time(info);
 	while (i < info->amount_of_philo && info->amount_of_cicles != -1)
 	{
@@ -115,7 +113,8 @@ int	init_philo(t_info *info, t_philo *philo, pthread_mutex_t *forks)
 	}
 	if (info->amount_of_cicles == -1)
 	{
-		destroy_forks(forks, info->amount_of_philo);
+		pthread_mutex_destroy(&info->message);
+		destroy_forks(forks, info->keep_amount_of_philo);
 		return (-1);
 	}
 	return (0);
