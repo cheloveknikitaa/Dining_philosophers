@@ -6,7 +6,7 @@
 /*   By: caugusta <caugusta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 15:00:08 by caugusta          #+#    #+#             */
-/*   Updated: 2021/08/22 22:08:52 by caugusta         ###   ########.fr       */
+/*   Updated: 2021/09/18 19:45:46 by caugusta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ int	inits_forks(t_info *info, pthread_mutex_t *forks, t_philo *philo)
 	i = 0;
 	while (i < info->amount_of_philo - 1)
 	{
-		philo[i].left = &forks[i + 1];
-		philo[i].right = &forks[i];
+		philo[i].left = &forks[i];
+		philo[i].right = &forks[i + 1];
 		i++;
 	}
 	philo[i].left = &forks[i];
